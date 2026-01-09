@@ -1,0 +1,66 @@
+
+FROM ros:noetic-ros-base
+
+LABEL maintainer ana.milas@fer.hr
+
+# Use ARG - persists only during docker build
+# https://github.com/moby/moby/issues/4032#issuecomment-192327844
+ARG CATKIN_WORKSPACE=uav_ws
+ARG DEBIAN_FRONTEND=noninteractive
+ARG HOME=/root
+ARG ROS_DISTRO=noetic
+
+# Install all the things to stop docker build from breaking
+RUN ln -fs /usr/share/zoneinfo/Europe/Zagreb /etc/localtime && \
+    apt-get update && apt-get install -q -y \
+    git \
+    sudo \
+    lsb-release \
+    gnupg2 \
+    apt-utils \
+    dialog \
+    curl \
+    nano \
+    tzdata && \
+    dpkg-reconfigure --frontend noninteractive tzdata
+
+# install ssh client and git
+RUN apt-get install openssh-client git
+
+# download public key for github.com
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+# Install dependencies
+RUN apt-get update && apt-get install -q -y \
+    ros-$ROS_DISTRO-octomap-ros \
+    ros-$ROS_DISTRO-octomap-ros \
+    ros-$ROS_DISTRO-octomap \ 
+    ros-$ROS_DISTRO-octomap-server \
+    ros-$ROS_DISTRO-octomap-msgs \
+    ros-$ROS_DISTRO-octomap-rviz-plugins \
+    ros-$ROS_DISTRO-ompl git \
+    ros-$ROS_DISTRO-eigen-conversions \
+    libompl-dev \
+    python3-catkin-tools \
+    libdlib-dev
+
+# Clone and build larics_motion_planning
+WORKDIR $HOME/$CATKIN_WORKSPACE/src
+RUN --mount=type=ssh git clone git@github.com:larics/larics_motion_planning.git
+RUN --mount=type=ssh git clone git@github.com:larics/topp_ros.git
+WORKDIR $HOME/$CATKIN_WORKSPACE/src/larics_motion_planning
+RUN git checkout exploration
+
+# Clone and build uav_frontier_exploration_3d
+WORKDIR $HOME/$CATKIN_WORKSPACE/src
+RUN --mount=type=ssh git clone git@github.com:AnaBatinovic/uav_frontier_exploration_3d.git
+RUN git clone https://github.com/larics/mean_shift_clustering.git
+RUN git clone https://github.com/AnaBatinovic/octomap-1.7.2.git
+RUN git clone https://github.com/OctoMap/octomap_ros.git
+
+RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
+RUN echo "source ~/$CATKIN_WORKSPACE/devel/setup.bash" >> ~/.bashrc
+RUN echo "octomap_DIR=~/$CATKIN_WORKSPACE/src/octomap-1.7.2/octomap/lib/cmake/octomap" >> ~/.bashrc
+RUN bash -c "source ~/.bashrc"
+WORKDIR $HOME/$CATKIN_WORKSPACE
+RUN catkin build 

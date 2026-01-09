@@ -1,10 +1,10 @@
 #!/bin/bash
 
-DOCKERFILE=Dockerfile.bionic
+DOCKERFILE=Dockerfile.focal
 IMAGE_NAME=frontier_exp
 
-distro="bionic"
-ros_distro="melodic"
+distro="focal"
+ros_distro="noetic"
 build_args=""
 for (( i=1; i<=$#; i++));
 do
