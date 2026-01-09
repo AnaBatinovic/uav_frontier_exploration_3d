@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(uav_frontier_exploration_3d)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -17,7 +18,6 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
   pcl_conversions
   dynamic_reconfigure
-  geographic_msgs
   octomap_msgs
   octomap_ros
   nodelet
@@ -34,11 +34,11 @@ find_package(PCL 1.8 REQUIRED COMPONENTS
 find_package(octomap 1.7 REQUIRED)
 add_definitions(-DOCTOMAP_NODEBUGOUT)
 find_package(cmake_modules REQUIRED)
+find_package(dlib REQUIRED)
 
 generate_messages(
     DEPENDENCIES
     std_msgs
-    geographic_msgs
 )
 
 catkin_package(
@@ -63,6 +63,7 @@ set(LINK_LIBS
     ${OCTOMAP_LIBRARIES}
     ${catkin_LIBRARIES}
     ${PCL_LIBRARIES}
+    dlib::dlib
 )
 
 add_library(frontier_exploration_3d 
