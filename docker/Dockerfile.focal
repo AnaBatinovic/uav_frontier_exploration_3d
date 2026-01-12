@@ -21,6 +21,8 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Zagreb /etc/localtime && \
     dialog \
     curl \
     nano \
+    tmux \
+    tmuxinator \
     tzdata && \
     dpkg-reconfigure --frontend noninteractive tzdata
 
@@ -38,12 +40,17 @@ RUN apt-get update && apt-get install -q -y \
     ros-$ROS_DISTRO-octomap-server \
     ros-$ROS_DISTRO-octomap-msgs \
     ros-$ROS_DISTRO-octomap-rviz-plugins \
-    ros-$ROS_DISTRO-ompl git \
+    ros-$ROS_DISTRO-octovis \
+    ros-$ROS_DISTRO-ompl \
     ros-$ROS_DISTRO-eigen-conversions \
     libompl-dev \
+    libqglviewer-dev-qt5 \
+    qtbase5-dev \
+    libqt5opengl5-dev \
     python3-catkin-tools \
     libdlib-dev
 
+COPY to_copy/tmux $HOME/.tmux.conf
 # Clone and build larics_motion_planning
 WORKDIR $HOME/$CATKIN_WORKSPACE/src
 RUN --mount=type=ssh git clone git@github.com:larics/larics_motion_planning.git
@@ -61,6 +68,9 @@ RUN git clone https://github.com/OctoMap/octomap_ros.git
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 RUN echo "source ~/$CATKIN_WORKSPACE/devel/setup.bash" >> ~/.bashrc
 RUN echo "octomap_DIR=~/$CATKIN_WORKSPACE/src/octomap-1.7.2/octomap/lib/cmake/octomap" >> ~/.bashrc
-RUN bash -c "source ~/.bashrc"
 WORKDIR $HOME/$CATKIN_WORKSPACE
-RUN catkin build 
+RUN bash -c " \
+    source /opt/ros/$ROS_DISTRO/setup.bash && \
+    catkin config --skiplist octovis && \
+    catkin build \
+"
