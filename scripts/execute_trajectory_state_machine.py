@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 __author__ = 'abatinovic'
 
@@ -57,7 +57,7 @@ class UavExplorationSm:
       queue_size=1)
 
     # Initialize services
-    print "Waiting for service multi_dof_trajectory."
+    print("Waiting for service multi_dof_trajectory.")
     rospy.wait_for_service('multi_dof_trajectory', timeout=30)
     self.plan_trajectory_service = rospy.ServiceProxy(
       "multi_dof_trajectory", MultiDofTrajectory)
@@ -82,9 +82,9 @@ class UavExplorationSm:
     self.state_pub.publish(self.state)
 
     while not rospy.is_shutdown() and not self.first_measurement_received:
-      print ("Waiting for the first pose...")
+      print("Waiting for the first pose...")
       time.sleep(1)
-    print ("The first pose received. Starting exploration state machine.")
+    print("The first pose received. Starting exploration state machine.")
 
     while not rospy.is_shutdown():
 
@@ -104,7 +104,7 @@ class UavExplorationSm:
         else: 
           print("Planning again!")
 
-        print ("Calling service!")
+        print("Calling service!")
         # Call the obstacle free trajectory planning service
         request = MultiDofTrajectoryRequest()
         # Create start point from current position information
@@ -136,11 +136,11 @@ class UavExplorationSm:
           # If we did not manage to obtain a successful plan then go to
           # appropriate state.
           if response.success == False:
-            print ("**********************************************")
-            print ("In state:", self.state)
-            print ("Path planning failed!")
-            print ("**********************************************")
-            print (" ")
+            print("**********************************************")
+            print("In state:", self.state)
+            print("Path planning failed!")
+            print("**********************************************")
+            print(" ")
             self.state = ("end")
           # If plan was successful then execute it.
           else:
@@ -163,11 +163,11 @@ class UavExplorationSm:
         while not rospy.is_shutdown():      
           # When trajectory is executed simply go to end state.
           if self.checkTrajectoryExecuted() == True:
-            print ("**********************************************")
-            print ("In state:", self.state)
-            print ("Execution timeout factor triggered!")
-            print ("**********************************************")
-            print (" ")
+            print("**********************************************")
+            print("In state:", self.state)
+            print("Execution timeout factor triggered!")
+            print("**********************************************")
+            print(" ")
             self.state = "end"
             break
           # If we want to send another point anytime
@@ -191,16 +191,16 @@ class UavExplorationSm:
       rate.sleep()
 
   def printStates(self):
-    print ("----------------------------------------------------")
-    print ("State changed. Previous state:", self.state_previous)
-    print ("State changed. Current state:", self.state)
-    print ("----------------------------------------------------")
-    print (" ")
+    print("----------------------------------------------------")
+    print("State changed. Previous state:", self.state_previous)
+    print("State changed. Current state:", self.state)
+    print("----------------------------------------------------")
+    print(" ")
 
   def targetPointCallback(self, msg):
     self.target_pose = msg.pose
     self.state = "plan"
-    print ("New goal accepted.")
+    print("New goal accepted.")
 
   def globalPositionCallback(self, msg):
     self.current_pose = msg.pose.pose
