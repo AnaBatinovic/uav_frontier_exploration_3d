@@ -1,5 +1,9 @@
 #!/bin/bash
 
+XAUTH=/tmp/.docker.xauth
+touch $XAUTH
+xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+
 CONTAINER_NAME=$1
 [ -z "$CONTAINER_NAME" ] && CONTAINER_NAME=frontier_exp
 
