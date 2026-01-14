@@ -10,7 +10,7 @@ windows:
   - exploration:
       layout: tiled
       panes:
-        - waitForRos; waitForOdometry; export USER="../root"; roslaunch uav_frontier_exploration_3d planner.launch
+        - waitForRos; waitForOdometry; roslaunch uav_frontier_exploration_3d planner.launch
         - waitForRos; waitForOdometry; roslaunch uav_frontier_exploration_3d execute_trajectory.launch
         - waitForRos; waitForOdometry; roslaunch uav_frontier_exploration_3d frontier_server.launch odometry:=/odometry config_filename:=$(rospack find uav_frontier_exploration_3d)/config/test_sim.yaml
         - "#waitForRos; waitForOdometry; rosservice call /$UAV_NAMESPACE/exploration/toggle \"data: true\""

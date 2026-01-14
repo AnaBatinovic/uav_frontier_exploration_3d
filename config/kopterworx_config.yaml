@@ -1,10 +1,9 @@
 global_planner:
-  map_config_file: "uav_ws/src/uav_frontier_exploration_3d/config/kopterworx_config.yaml"
-  trajectory_config_file: "uav_ws/src/uav_frontier_exploration_3d/config/kopterworx_config.yaml"
-  path_planner_config_file: "uav_ws/src/uav_frontier_exploration_3d/config/kopterworx_config.yaml"
-  state_validity_checker_config_file: "uav_ws/src/uav_frontier_exploration_3d/config/kopterworx_config.yaml"
-  kinematics_config_file: "uav_ws/src/uav_frontier_exploration_3d/config/kopterworx_config.yaml"
-
+  map_config_file: "/root/uav_ws/src/uav_frontier_exploration_3d/config/kopterworx_config.yaml"
+  trajectory_config_file: "/root/uav_ws/src/uav_frontier_exploration_3d/config/kopterworx_config.yaml"
+  path_planner_config_file: "/root/uav_ws/src/uav_frontier_exploration_3d/config/kopterworx_config.yaml"
+  state_validity_checker_config_file: "/root/uav_ws/src/uav_frontier_exploration_3d/config/kopterworx_config.yaml"
+  kinematics_config_file: "/root/uav_ws/src/uav_frontier_exploration_3d/config/kopterworx_config.yaml"
   # If planning for trajectory only, global planner will try to plan several
   # times if previous attempts fail. In case all attempts fail, empty trajectory
   # is returned
@@ -63,6 +62,21 @@ global_planner:
     horizontal_intermediate_acceleration: 0.5
 
     spline_sampling_time: 0.01
+
+trajectory_planner:
+  constant_velocity_reparametrization:
+    axes_index_list: [0, 1, 2, 3]
+    velocity_constraints: [0.8, 0.8, 0.5, 1.0]
+  
+  toppra_trajectory:
+    # Maximum velocities for [x, y, z, yaw]
+    velocities: [0.8, 0.8, 0.5, 1]
+    # Maximum accelerations for [x, y, z, yaw]
+    accelerations: [0.5, 0.5, 0.8, 1]
+    # If using SO states angular must be set to 1
+    is_angular: [0, 0, 0, 1]
+    # Trajectory sampling frequency
+    sampling_frequency: 100.0
 
 octomap:
   path_to_file: "catkin_ws/src/larics_motion_planning/config/empty_map.binvox.bt"
