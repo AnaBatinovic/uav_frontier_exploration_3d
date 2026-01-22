@@ -30,7 +30,7 @@ different resolutions.
 
 Video recordings of frontier-based exploration for both simulation and experimental scenarios can be found at [YouTube](https://www.youtube.com/playlist?list=PLC0C6uwoEQ8a88D6cKfa81Hfo_s_qVZxf).
 
-This README gives a brief overview. For more information, please refer to the [wiki](https://github.com/larics/uav_frontier_exploration_3d/wiki), where all further instructions on installation, visualization of exploration progress, as well as demo scenarios and descriptions of parameters can be found.
+This README gives a brief overview. For more information, please refer to the [wiki](https://github.com/AnaBatinovic/uav_frontier_exploration_3d/wiki), where all further instructions on installation, visualization of exploration progress, as well as demo scenarios and descriptions of parameters can be found.
 
 ## Credits
 
