@@ -35,10 +35,10 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 # Mitigate interactive prompt for choosing keyboard type
 COPY ./to_copy/keyboard /etc/default/keyboard
 # Copy configuration files
-COPY ./to_copy/aliases /root/.bash_aliases
-COPY ./to_copy/nanorc /root/.nanorc
-COPY ./to_copy/tmux /root/.tmux.conf
-COPY ./to_copy/ranger /root/.config/ranger/rc.conf
+COPY ./to_copy/aliases $HOME/.bash_aliases
+COPY ./to_copy/nanorc $HOME/.nanorc
+COPY ./to_copy/tmux $HOME/.tmux.conf
+COPY ./to_copy/ranger $HOME/.config/ranger/rc.conf
 
 # Install dependencies
 RUN apt-get update && apt-get install -q -y \
@@ -65,7 +65,6 @@ RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --upgrade "numpy>=1.19.5,<1.27"
 RUN pip3 install toppra
 
-COPY to_copy/tmux $HOME/.tmux.conf
 # Clone and build larics_motion_planning
 WORKDIR $HOME/$CATKIN_WORKSPACE/src
 RUN --mount=type=ssh git clone git@github.com:larics/larics_motion_planning.git
@@ -89,3 +88,4 @@ RUN bash -c " \
     catkin config --skiplist octovis && \
     catkin build \
 "
+WORKDIR $HOME/$CATKIN_WORKSPACE/src/uav_frontier_exploration_3d/scripts/startup
