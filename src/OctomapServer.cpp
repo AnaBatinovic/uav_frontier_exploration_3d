@@ -84,10 +84,11 @@ namespace octomap_server
 	}
 
 	void OctomapServer::pointCloudCallback(
-		const sensor_msgs::PointCloud2::ConstPtr& cloud)
+		const sensor_msgs::PointCloud::ConstPtr& cloud)
 	{
 		m_currPointCloud = *cloud;
 		m_pointCloudReceivedFlag = true;
+		cout << "pointcloud received " << endl;
 	}
 
 	void OctomapServer::globalPoseCallback(
@@ -276,13 +277,21 @@ namespace octomap_server
 	void OctomapServer::transformAndFilterPointCloud(
 		tf::StampedTransform& sensorToWorldTf, PCLPointCloud& pc)
 	{
+		cout << "m_pointCloudReceivedFlag: " << m_pointCloudReceivedFlag << endl;
 		while (!m_pointCloudReceivedFlag) 
 		{
 			ros::spinOnce();
 			ros::Duration(0.2).sleep();
 		}
 		// Input cloud for filtering and ground-detection
-		pcl::fromROSMsg(m_currPointCloud, pc);
+		// Convert sensor_msgs::PointCloud to PCL PointCloud
+		pc.clear();
+		pc.resize(m_currPointCloud.points.size());
+		for (size_t i = 0; i < m_currPointCloud.points.size(); ++i) {
+			pc[i].x = m_currPointCloud.points[i].x;
+			pc[i].y = m_currPointCloud.points[i].y;
+			pc[i].z = m_currPointCloud.points[i].z;
+		}
 
 		try 
 		{
@@ -310,6 +319,7 @@ namespace octomap_server
 		// Filter height range
 		pass.setInputCloud(pc.makeShared());
 		pass.filter(pc);
+		cout << "pointcloud done " << endl;
 	}
 
 	bool OctomapServer::isSpeckleNode(const OcTreeKey&nKey) const 

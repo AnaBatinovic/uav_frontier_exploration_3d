@@ -6,7 +6,7 @@
 #include <std_msgs/ColorRGBA.h>
 #include <std_msgs/Float64MultiArray.h>
 #include <std_srvs/Empty.h>
-#include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/PointCloud.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Pose.h>
@@ -56,7 +56,7 @@ namespace octomap_server
       OctomapServer();
       virtual ~OctomapServer();
 
-      void pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud);
+      void pointCloudCallback(const sensor_msgs::PointCloud::ConstPtr& cloud);
       void globalPoseCallback(const nav_msgs::Odometry::ConstPtr& msg);
       bool configureFromFile(string config_filename);
       void runDefault();
@@ -96,7 +96,7 @@ namespace octomap_server
       ros::Subscriber m_pointCloudSub, m_uavGlobalPoseSub;
       ros::ServiceServer m_saveOctomapServer;
       tf::TransformListener m_tfListener;
-      sensor_msgs::PointCloud2 m_currPointCloud;
+      sensor_msgs::PointCloud m_currPointCloud;
 
       octomap::OcTree* m_octree {NULL};
       octomap::KeyRay m_keyRay;  // temp storage for ray casting
